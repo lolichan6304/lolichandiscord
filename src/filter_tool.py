@@ -14,10 +14,13 @@ def find_url(string):
     return codes
 
 def scan_links(urls, censoredtags):
-    problemmatic_tags = ["loli", "lolicon", "shotacon"]
+    clean = False
+    problemmatic_tags = []
     for link in urls:
-        #page = requests.get('https://nhentai.net/api/gallery/{}'.format(link))
-        page = requests.get('https://google.com')
-        tree = html.fromstring(page.content)
-    
-    return True, problemmatic_tags
+        page = requests.get('https://nhentai.net/api/gallery/{}'.format(link))
+        tags = page.json()["tags"]
+        for tag in tags:
+            if tag["name"] in censoredtags:
+                clean = True
+                problemmatic_tags.append(tag["name"])
+    return clean, problemmatic_tags

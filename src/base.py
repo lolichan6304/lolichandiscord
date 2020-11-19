@@ -100,6 +100,6 @@ class LoliChan(discord.Client):
                 if self.verbose:
                     print('a problemmatic tag was found')
                 await message.delete()
-                await message.channel.send(f"Hi {message.author.mention}, your nhentai link(s) contains the {msg} tags, please do not send links with these tags!")
+                await message.channel.send(f"Hi {message.author.mention}, your nhentai link(s) contain(s) the {msg} tag(s), please do not send links with these tag(s)!")
         
             
