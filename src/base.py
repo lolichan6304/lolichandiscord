@@ -22,7 +22,7 @@ class LoliChan(discord.Client):
                 msg = "**FILTERBOT HELP**\n> Available commands:\n```"
                 padding = max(list(map(lambda x: len(x), list(ACCEPTABLE_COMMANDS.keys()))))+1
                 for k, v in ACCEPTABLE_COMMANDS.items():
-                    msg += '{message: >{padding}}: Usage - {description}\n'.format(message=k, padding=padding, description=v['desc'])
+                    msg += '{message: <{padding}}| Usage - {description}\n'.format(message=k, padding=padding, description=v['desc'])
                 msg += '```'
                 return msg
 
@@ -30,7 +30,7 @@ class LoliChan(discord.Client):
                 msg = '**Forbidden Tags**'
                 padding = max(list(map(lambda x: len(x), list(self.forbidden_tags.keys()))))+1
                 for k, v in self.forbidden_tags.items():
-                    msg += '\n> {message: >{padding}}: {values}'.format(message=k, padding=padding, values=", ".join(sorted(v)))
+                    msg += '\n> {message: <{padding}}| {values}'.format(message=k, padding=padding, values=", ".join(sorted(v)))
                 return msg
 
             def add_(message):
@@ -70,7 +70,7 @@ class LoliChan(discord.Client):
             msg = "**TOOLKIT HELP**\n> Available commands:\n```"
             padding = max(list(map(lambda x: len(x), list(ACCEPTABLE_COMMANDS.keys()))))+1
             for k, v in ACCEPTABLE_COMMANDS.items():
-                msg += '{message: >{padding}}: Usage - {description}\n'.format(message=k, padding=padding, description=v['desc'])
+                msg += '{message: <{padding}}| Usage - {description}\n'.format(message=k, padding=padding, description=v['desc'])
             msg += '```'
             return msg
 
@@ -79,7 +79,7 @@ class LoliChan(discord.Client):
                 msg = "**PERMISSION HELP**\n> Available commands:\n```"
                 padding = max(list(map(lambda x: len(x), list(ACCEPTABLE_COMMANDS.keys()))))+1
                 for k, v in ACCEPTABLE_COMMANDS.items():
-                    msg += '{message: >{padding}}: Usage - {description}\n'.format(message=k, padding=padding, description=v['desc'])
+                    msg += '{message: <{padding}}| Usage - {description}\n'.format(message=k, padding=padding, description=v['desc'])
                 msg += '```'
                 return msg
 
