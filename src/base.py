@@ -23,15 +23,15 @@ class LoliChan(discord.Client):
                 return "**forbidden tags:**  {}".format(", ".join(self.forbidden_tags))
 
             def add_(message):
-                for i in message:
-                    if i.lower() not in self.forbidden_tags:
-                        self.forbidden_tags.append(i.lower())
+                to_add = " ".join(message)
+                if to_add not in self.forbidden_tags:
+                    self.forbidden_tags.append(to_add.lower())
                 return not_allowed(message)
 
             def remove_(message):
-                for i in message:
-                    while i.lower() in self.forbidden_tags:
-                        self.forbidden_tags.remove(i.lower())
+                to_add = " ".join(message)
+                while to_add in self.forbidden_tags:
+                    self.forbidden_tags.remove(to_add.lower())
                 return not_allowed(message)
 
             ACCEPTABLE_COMMANDS = {
@@ -69,15 +69,15 @@ class LoliChan(discord.Client):
                 return "**allowed roles:**  {}".format(", ".join(self.allowed_roles))
 
             def add_(message):
-                for i in message:
-                    if i not in self.allowed_roles:
-                        self.allowed_roles.append(i)
+                to_add = " ".join(message)
+                if to_add not in self.allowed_roles:
+                    self.allowed_roles.append(to_add)
                 return list_permission(message)
 
             def remove_(message):
-                for i in message:
-                    while i in self.allowed_roles:
-                        self.allowed_roles.remove(i)
+                to_add = " ".join(message)
+                while to_add in self.allowed_roles:
+                    self.allowed_roles.remove(to_add)
                 return list_permission(message)
 
             ACCEPTABLE_COMMANDS = {
