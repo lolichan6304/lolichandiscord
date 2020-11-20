@@ -10,6 +10,7 @@ class LoliChan(discord.Client):
         self.verbose = verbose
         self.forbidden_tags = ["loli", "lolicon", "shotacon", "bestiality", "necrophilia", "cannibalism"]
         self.allowed_roles = ["Admin", "Staff", "Moderator"]
+        self.cmd_tag = 'llc-'
 
     def admin_command_reader(self, content):
         def filterbot(message):
@@ -36,10 +37,10 @@ class LoliChan(discord.Client):
                 return not_allowed(message)
 
             ACCEPTABLE_COMMANDS = {
-                'help' : {'func': help_, 'desc': ''},
-                'not_allowed' : {'func': not_allowed, 'desc': ''},
-                'add' : {'func': add_, 'desc': ''},
-                'remove' : {'func': remove_, 'desc': ''}
+                'help' : {'func': help_, 'desc': self.cmd_tag+'filterbot help'},
+                'list' : {'func': not_allowed, 'desc': self.cmd_tag+'filterbot list'},
+                'add' : {'func': add_, 'desc': self.cmd_tag+'filter add *tag*'},
+                'remove' : {'func': remove_, 'desc': self.cmd_tag+'filter remove *tag*'}
             }
 
             if len(message) == 0:
@@ -82,10 +83,10 @@ class LoliChan(discord.Client):
                 return list_permission(message)
 
             ACCEPTABLE_COMMANDS = {
-                'help' : {'func': help_, 'desc': ''},
-                'list_permission' : {'func': list_permission, 'desc': ''},
-                'add' : {'func': add_, 'desc': ''},
-                'remove' : {'func': remove_, 'desc': ''}
+                'help' : {'func': help_, 'desc': self.cmd_tag+'permissions help'},
+                'list' : {'func': list_permission, 'desc': self.cmd_tag+'permissions list'},
+                'add' : {'func': add_, 'desc': self.cmd_tag+'permissions add *role* [CASE SENSITIVE]'},
+                'remove' : {'func': remove_, 'desc': self.cmd_tag+'permissions remove *role* [CASE SENSITIVE]'}
             }
 
             if len(message) == 0:
@@ -98,9 +99,9 @@ class LoliChan(discord.Client):
                 return 'incorect command given, please choose command from list: {}'.format(", ".join(list(ACCEPTABLE_COMMANDS.keys())))
 
         ACCEPTABLE_COMMANDS = {
-            'help' : {'func': help_, 'desc': ''},
-            'filterbot' : {'func': filterbot, 'desc': ''},
-            'permissions' : {'func': permission, 'desc': ''}
+            'help' : {'func': help_, 'desc': self.cmd_tag+'help'},
+            'filterbot' : {'func': filterbot, 'desc': self.cmd_tag+'filterbot'},
+            'permissions' : {'func': permission, 'desc': self.cmd_tag+'permissions'}
         }
         
         cmd = content.split(' ')[0]
@@ -120,12 +121,11 @@ class LoliChan(discord.Client):
             return
 
         # command central
-        cmd_tag = '!'
-        if message.content[:len(cmd_tag)] == cmd_tag:
+        if message.content[:len(self.cmd_tag)] == self.cmd_tag:
             not_found = True
             for role in message.author.roles:
                 if role.name in self.allowed_roles and not_found:
-                    reply = self.admin_command_reader(message.content[len(cmd_tag):])
+                    reply = self.admin_command_reader(message.content[len(self.cmd_tag):])
                     await message.channel.send(reply)
                     not_found = False
             if not_found:
