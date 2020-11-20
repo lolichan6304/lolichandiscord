@@ -1,0 +1,22 @@
+{
+    "forbidden_tags": {
+        "all" : [
+            "loli",
+            "lolicon",
+            "shotacon",
+            "bestiality",
+            "necrophilia",
+            "cannibalism",
+            "guro"
+        ],
+
+        "vanilla-lounge" : [
+            "netorare",
+            "rape",
+            "cheating"
+        ]
+    },
+
+    "allowed_roles": ["Admin", "Staff", "Moderator"],
+    "cmd_tag": "llc-"
+}

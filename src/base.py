@@ -1,4 +1,5 @@
 import os
+import json
 import discord
 
 from src.filter_tool import find_url, scan_links
@@ -8,27 +9,11 @@ class LoliChan(discord.Client):
     def __init__(self, verbose=False):
         super(LoliChan, self).__init__()
         self.verbose = verbose
-        self.forbidden_tags = {
-            "all" : [
-                "loli",
-                "lolicon",
-                "shotacon",
-                "bestiality",
-                "necrophilia",
-                "cannibalism",
-                "guro"
-            ],
-            "vanilla-lounge" : [
-                "netorare",
-                "rape"
-            ]
-        }
-        self.allowed_roles = [
-            "Admin",
-            "Staff",
-            "Moderator"
-        ]
-        self.cmd_tag = 'llc-'
+        with open('./data/defaults.json') as json_file:
+            data = json.load(json_file)
+            self.forbidden_tags = data["forbidden_tags"]
+            self.allowed_roles = data["allowed_roles"]
+            self.cmd_tag = data["cmd_tag"]
 
     def admin_command_reader(self, content):
         def filterbot(message):
