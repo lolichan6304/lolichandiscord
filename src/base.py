@@ -50,8 +50,8 @@ class LoliChan(discord.Client):
             ACCEPTABLE_COMMANDS = {
                 'help' : {'func': help_, 'desc': self.cmd_tag+'filterbot help'},
                 'list' : {'func': not_allowed, 'desc': self.cmd_tag+'filterbot list'},
-                'add' : {'func': add_, 'desc': self.cmd_tag+'filterbot add channel *tag* [for global tags, use all for channel]'},
-                'remove' : {'func': remove_, 'desc': self.cmd_tag+'filterbot remove channel *tag* [for global tags, use all for channel]'}
+                'add' : {'func': add_, 'desc': self.cmd_tag+'filterbot add channel tag [for global tags, use all for channel]'},
+                'remove' : {'func': remove_, 'desc': self.cmd_tag+'filterbot remove channel tag [for global tags, use all for channel]'}
             }
 
             if len(message) == 0:
@@ -96,8 +96,8 @@ class LoliChan(discord.Client):
             ACCEPTABLE_COMMANDS = {
                 'help' : {'func': help_, 'desc': self.cmd_tag+'permissions help'},
                 'list' : {'func': list_permission, 'desc': self.cmd_tag+'permissions list'},
-                'add' : {'func': add_, 'desc': self.cmd_tag+'permissions add *role* [CASE SENSITIVE]'},
-                'remove' : {'func': remove_, 'desc': self.cmd_tag+'permissions remove *role* [CASE SENSITIVE]'}
+                'add' : {'func': add_, 'desc': self.cmd_tag+'permissions add role [CASE SENSITIVE]'},
+                'remove' : {'func': remove_, 'desc': self.cmd_tag+'permissions remove role [CASE SENSITIVE]'}
             }
 
             if len(message) == 0:
