@@ -56,7 +56,7 @@ class LoliChan(discord.Client):
 
             def remove_(message):
                 channel = message[0]
-                to_add = " ".join(message)
+                to_add = " ".join(message[1:])
                 if channel in self.forbidden_tags.keys():
                     while to_add in self.forbidden_tags[channel]:
                         self.forbidden_tags[channel].remove(to_add.lower())
