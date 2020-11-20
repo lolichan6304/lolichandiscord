@@ -22,6 +22,6 @@
     },
 
     "allowed_roles": ["Admin", "Staff", "Moderator"],
-    "admin_cmd_tag": "llcadmin-",
+    "admin_cmd_tag": "llca-",
     "cmd_tag": "llc-"
 }

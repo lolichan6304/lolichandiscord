@@ -128,6 +128,7 @@ class LoliChan(discord.Client):
             # for k, v in ACCEPTABLE_COMMANDS.items():
             #     msg += '{}: Usage - {}\n'.format(k, v['desc'])
             # msg += '```'
+            msg = "UNDER DEVELOPMENT! TEEHEE"
             return msg
 
         ACCEPTABLE_COMMANDS = {
