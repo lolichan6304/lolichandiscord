@@ -13,6 +13,7 @@ class LoliChan(discord.Client):
             data = json.load(json_file)
             self.forbidden_tags = data["forbidden_tags"]
             self.allowed_roles = data["allowed_roles"]
+            self.admin_cmd_tag = data["admin_cmd_tag"]
             self.cmd_tag = data["cmd_tag"]
 
     def admin_command_reader(self, content):
@@ -48,10 +49,10 @@ class LoliChan(discord.Client):
                 return not_allowed(message)
 
             ACCEPTABLE_COMMANDS = {
-                'help' : {'func': help_, 'desc': self.cmd_tag+'filterbot help'},
-                'list' : {'func': not_allowed, 'desc': self.cmd_tag+'filterbot list'},
-                'add' : {'func': add_, 'desc': self.cmd_tag+'filterbot add channel tag [for global tags, use all for channel]'},
-                'remove' : {'func': remove_, 'desc': self.cmd_tag+'filterbot remove channel tag [for global tags, use all for channel]'}
+                'help' : {'func': help_, 'desc': self.admin_cmd_tag+'filterbot help'},
+                'list' : {'func': not_allowed, 'desc': self.admin_cmd_tag+'filterbot list'},
+                'add' : {'func': add_, 'desc': self.admin_cmd_tag+'filterbot add channel tag [for global tags, use all for channel]'},
+                'remove' : {'func': remove_, 'desc': self.admin_cmd_tag+'filterbot remove channel tag [for global tags, use all for channel]'}
             }
 
             if len(message) == 0:
@@ -94,10 +95,10 @@ class LoliChan(discord.Client):
                 return list_permission(message)
 
             ACCEPTABLE_COMMANDS = {
-                'help' : {'func': help_, 'desc': self.cmd_tag+'permissions help'},
-                'list' : {'func': list_permission, 'desc': self.cmd_tag+'permissions list'},
-                'add' : {'func': add_, 'desc': self.cmd_tag+'permissions add role [CASE SENSITIVE]'},
-                'remove' : {'func': remove_, 'desc': self.cmd_tag+'permissions remove role [CASE SENSITIVE]'}
+                'help' : {'func': help_, 'desc': self.admin_cmd_tag+'permissions help'},
+                'list' : {'func': list_permission, 'desc': self.admin_cmd_tag+'permissions list'},
+                'add' : {'func': add_, 'desc': self.admin_cmd_tag+'permissions add role [CASE SENSITIVE]'},
+                'remove' : {'func': remove_, 'desc': self.admin_cmd_tag+'permissions remove role [CASE SENSITIVE]'}
             }
 
             if len(message) == 0:
@@ -110,9 +111,27 @@ class LoliChan(discord.Client):
                 return 'incorect command given, please choose command from list: {}'.format(", ".join(list(ACCEPTABLE_COMMANDS.keys())))
 
         ACCEPTABLE_COMMANDS = {
-            'help' : {'func': help_, 'desc': self.cmd_tag+'help'},
-            'filterbot' : {'func': filterbot, 'desc': self.cmd_tag+'filterbot'},
-            'permissions' : {'func': permission, 'desc': self.cmd_tag+'permissions'}
+            'help' : {'func': help_, 'desc': self.admin_cmd_tag+'help'},
+            'filterbot' : {'func': filterbot, 'desc': self.admin_cmd_tag+'filterbot'},
+            'permissions' : {'func': permission, 'desc': self.admin_cmd_tag+'permissions'}
+        }
+        
+        cmd = content.split(' ')[0]
+        if cmd in ACCEPTABLE_COMMANDS.keys():
+            return ACCEPTABLE_COMMANDS[cmd]['func'](content.split(' ')[1:])
+        else:
+            return 'incorect command given, please choose command from list: {}'.format(", ".join(list(ACCEPTABLE_COMMANDS.keys())))
+
+    def command_reader(self, content):
+        def help_(message):
+            # msg = "**TOOLKIT HELP**\n> Available commands:\n```"
+            # for k, v in ACCEPTABLE_COMMANDS.items():
+            #     msg += '{}: Usage - {}\n'.format(k, v['desc'])
+            # msg += '```'
+            return msg
+
+        ACCEPTABLE_COMMANDS = {
+            'help' : {'func': help_, 'desc': self.admin_cmd_tag+'help'},
         }
         
         cmd = content.split(' ')[0]
@@ -131,16 +150,21 @@ class LoliChan(discord.Client):
         if message.author == self.user:
             return
 
-        # command central
-        if message.content[:len(self.cmd_tag)] == self.cmd_tag:
+        # admin command central
+        if message.content[:len(self.admin_cmd_tag)] == self.admin_cmd_tag:
             not_found = True
             for role in message.author.roles:
                 if role.name in self.allowed_roles and not_found:
-                    reply = self.admin_command_reader(message.content[len(self.cmd_tag):])
+                    reply = self.admin_command_reader(message.content[len(self.admin_cmd_tag):])
                     await message.channel.send(reply)
                     not_found = False
             if not_found:
                 await message.channel.send(f"Hi {message.author.mention}, you do not have the required permission to use this command!")
+        
+        # regular command central
+        if message.content[:len(self.cmd_tag)] == self.cmd_tag:
+            reply = self.command_reader(message.content[len(self.cmd_tag):])
+            await message.channel.send(reply)
             
         # filter nhentai tags
         urls = find_url(message.content)
