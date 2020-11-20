@@ -13,7 +13,11 @@ class LoliChan(discord.Client):
     def admin_command_reader(self, content):
         def filterbot(message):
             def help_(message):
-                return "**FILTERBOT HELP**\n> Available commands:\n```{}```".format(", ".join(list(ACCEPTABLE_COMMANDS.keys())))
+                msg = "**FILTERBOT HELP**\n> Available commands:\n```"
+                for k, v in ACCEPTABLE_COMMANDS.items():
+                    msg += '{}: Usage - {}\n'.format(k, v['desc'])
+                msg += '```'
+                return msg
 
             def not_allowed(message):
                 return "**forbidden tags:**  {}".format(", ".join(self.forbidden_tags))
@@ -31,10 +35,10 @@ class LoliChan(discord.Client):
                 return not_allowed(message)
 
             ACCEPTABLE_COMMANDS = {
-                'help' : help_,
-                'not_allowed' : not_allowed,
-                'add' : add_,
-                'remove' : remove_
+                'help' : {'func': help_, 'desc': ''},
+                'not_allowed' : {'func': not_allowed, 'desc': ''},
+                'add' : {'func': add_, 'desc': ''},
+                'remove' : {'func': remove_, 'desc': ''}
             }
 
             if len(message) == 0:
@@ -42,21 +46,65 @@ class LoliChan(discord.Client):
 
             cmd = message[0]
             if cmd in ACCEPTABLE_COMMANDS.keys():
-                return ACCEPTABLE_COMMANDS[cmd](message[1:])
+                return ACCEPTABLE_COMMANDS[cmd]['func'](message[1:])
             else:
                 return 'incorect command given, please choose command from list: {}'.format(", ".join(list(ACCEPTABLE_COMMANDS.keys())))
 
         def help_(message):
-            return "**TOOLKIT HELP**\n> Available commands:\n```{}```".format(", ".join(list(ACCEPTABLE_COMMANDS.keys())))
-        
+            msg = "**TOOLKIT HELP**\n> Available commands:\n```"
+            for k, v in ACCEPTABLE_COMMANDS.items():
+                msg += '{}: Usage - {}\n'.format(k, v['desc'])
+            msg += '```'
+            return msg
+
+        def permission(message):
+            def help_(message):
+                msg = "**PERMISSION HELP**\n> Available commands:\n```"
+                for k, v in ACCEPTABLE_COMMANDS.items():
+                    msg += '{}: Usage - {}\n'.format(k, v['desc'])
+                msg += '```'
+                return msg
+
+            def list_permission(message):
+                return "**allowed roles:**  {}".format(", ".join(self.allowed_roles))
+
+            def add_(message):
+                for i in message:
+                    if i not in self.allowed_roles:
+                        self.allowed_roles.append(i)
+                return list_permission(message)
+
+            def remove_(message):
+                for i in message:
+                    while i in self.list_permission:
+                        self.list_permission.remove(i)
+                return list_permission(message)
+
+            ACCEPTABLE_COMMANDS = {
+                'help' : {'func': help_, 'desc': ''},
+                'list_permission' : {'func': list_permission, 'desc': ''},
+                'add' : {'func': add_, 'desc': ''},
+                'remove' : {'func': remove_, 'desc': ''}
+            }
+
+            if len(message) == 0:
+                return help_(message)
+
+            cmd = message[0]
+            if cmd in ACCEPTABLE_COMMANDS.keys():
+                return ACCEPTABLE_COMMANDS[cmd]['func'](message[1:])
+            else:
+                return 'incorect command given, please choose command from list: {}'.format(", ".join(list(ACCEPTABLE_COMMANDS.keys())))
+
         ACCEPTABLE_COMMANDS = {
-            'help' : help_,
-            'filterbot' : filterbot,
+            'help' : {'func': help_, 'desc': ''},
+            'filterbot' : {'func': filterbot, 'desc': ''},
+            'permissions' : {'func': permission, 'desc': ''}
         }
         
         cmd = content.split(' ')[0]
         if cmd in ACCEPTABLE_COMMANDS.keys():
-            return ACCEPTABLE_COMMANDS[cmd](content.split(' ')[1:])
+            return ACCEPTABLE_COMMANDS[cmd]['func'](content.split(' ')[1:])
         else:
             return 'incorect command given, please choose command from list: {}'.format(", ".join(list(ACCEPTABLE_COMMANDS.keys())))
 

@@ -9,6 +9,6 @@ load_dotenv()
 # Load env
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-client = LoliChan(verbose=True)
+client = LoliChan(verbose=False)
 
 client.run(TOKEN)
