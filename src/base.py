@@ -8,8 +8,20 @@ class LoliChan(discord.Client):
     def __init__(self, verbose=False):
         super(LoliChan, self).__init__()
         self.verbose = verbose
-        self.forbidden_tags = ["loli", "lolicon", "shotacon", "bestiality", "necrophilia", "cannibalism"]
-        self.allowed_roles = ["Admin", "Staff", "Moderator"]
+        self.forbidden_tags = [
+            "loli",
+            "lolicon",
+            "shotacon",
+            "bestiality",
+            "necrophilia",
+            "cannibalism",
+            "guro"
+        ]
+        self.allowed_roles = [
+            "Admin",
+            "Staff",
+            "Moderator"
+        ]
         self.cmd_tag = 'llc-'
 
     def admin_command_reader(self, content):
