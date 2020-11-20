@@ -76,8 +76,8 @@ class LoliChan(discord.Client):
 
             def remove_(message):
                 for i in message:
-                    while i in self.list_permission:
-                        self.list_permission.remove(i)
+                    while i in self.allowed_roles:
+                        self.allowed_roles.remove(i)
                 return list_permission(message)
 
             ACCEPTABLE_COMMANDS = {
