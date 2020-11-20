@@ -123,7 +123,7 @@ class LoliChan(discord.Client):
         if message.content[:len(cmd_tag)] == cmd_tag:
             not_found = True
             for role in message.author.roles:
-                if role.name in self.allowed_roles:
+                if role.name in self.allowed_roles and not_found:
                     reply = self.admin_command_reader(message.content[len(cmd_tag):])
                     await message.channel.send(reply)
                     not_found = False
