@@ -1,3 +1,4 @@
+import os
 import discord
 
 from src.filter_tool import find_url, scan_links
@@ -7,8 +8,18 @@ class LoliChan(discord.Client):
     def __init__(self, verbose=False):
         super(LoliChan, self).__init__()
         self.verbose = verbose
-        self.forbidden_tags = ["loli", "lolicon", "shotacon"]
-        self.allowed_roles = ["Admin"]
+        self.forbidden_tags = list(os.getenv['TAGS_NHENTAI'].split(","))
+        self.allowed_roles = list(os.getenv['ALLOWED_ROLES'].split(","))
+
+    def update_environment(self, switch):
+        if switch == 1:
+            os.environ['TAGS_NHENTAI'] = ",".join(self.forbidden_tags)
+        elif switch == 2:
+            os.environ['ALLOWED_ROLES'] = ",".join(self.allowed_roles)
+        else:
+            os.environ['TAGS_NHENTAI'] = ",".join(self.forbidden_tags)
+            os.environ['ALLOWED_ROLES'] = ",".join(self.allowed_roles)
+
 
     def admin_command_reader(self, content):
         def filterbot(message):
@@ -26,12 +37,14 @@ class LoliChan(discord.Client):
                 to_add = " ".join(message)
                 if to_add not in self.forbidden_tags:
                     self.forbidden_tags.append(to_add.lower())
+                self.update_environment(1)
                 return not_allowed(message)
 
             def remove_(message):
                 to_add = " ".join(message)
                 while to_add in self.forbidden_tags:
                     self.forbidden_tags.remove(to_add.lower())
+                self.update_environment(1)
                 return not_allowed(message)
 
             ACCEPTABLE_COMMANDS = {
@@ -72,12 +85,14 @@ class LoliChan(discord.Client):
                 to_add = " ".join(message)
                 if to_add not in self.allowed_roles:
                     self.allowed_roles.append(to_add)
+                self.update_environment(2)
                 return list_permission(message)
 
             def remove_(message):
                 to_add = " ".join(message)
                 while to_add in self.allowed_roles:
                     self.allowed_roles.remove(to_add)
+                self.update_environment(2)
                 return list_permission(message)
 
             ACCEPTABLE_COMMANDS = {
