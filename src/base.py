@@ -144,6 +144,8 @@ class LoliChan(discord.Client):
     # initialization
     async def on_ready(self):
         print(f'{self.user} has connected to Discord!')
+        activity = discord.Game(name="llc-help | llca-help")
+        await self.change_presence(activity=activity)
 
     async def on_message(self, message):
         ### implement checks
