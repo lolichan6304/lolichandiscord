@@ -13,14 +13,19 @@ def find_url(string):
             codes.append(i.split('/')[-1])
     return codes
 
-def scan_links(urls, censoredtags):
+def scan_links(urls, channel_name, censoredtags):
     clean = False
     problemmatic_tags = []
+    if channel_name in censoredtags.keys():
+        additional = censoredtags[channel_name]
+    else:
+        additional = []
+    list_of_tags = censoredtags['all'] + additional
     for link in urls:
         page = requests.get('https://nhentai.net/api/gallery/{}'.format(link))
         tags = page.json()["tags"]
         for tag in tags:
-            if tag["name"] in censoredtags:
+            if tag["name"] in list_of_tags:
                 clean = True
                 problemmatic_tags.append(tag["name"])
     return clean, problemmatic_tags

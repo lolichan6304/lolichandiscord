@@ -8,15 +8,21 @@ class LoliChan(discord.Client):
     def __init__(self, verbose=False):
         super(LoliChan, self).__init__()
         self.verbose = verbose
-        self.forbidden_tags = [
-            "loli",
-            "lolicon",
-            "shotacon",
-            "bestiality",
-            "necrophilia",
-            "cannibalism",
-            "guro"
-        ]
+        self.forbidden_tags = {
+            "all" : [
+                "loli",
+                "lolicon",
+                "shotacon",
+                "bestiality",
+                "necrophilia",
+                "cannibalism",
+                "guro"
+            ],
+            "vanilla-lounge" : [
+                "netorare",
+                "rape"
+            ]
+        }
         self.allowed_roles = [
             "Admin",
             "Staff",
@@ -34,25 +40,33 @@ class LoliChan(discord.Client):
                 return msg
 
             def not_allowed(message):
-                return "**forbidden tags:**  {}".format(", ".join(self.forbidden_tags))
+                msg = '**Forbidden Tags**'
+                for k, v in self.forbidden_tags:
+                    msg += f'\n> {k}: `{", ".join(sorted(v))}`'
+                return msg
 
             def add_(message):
-                to_add = " ".join(message)
-                if to_add not in self.forbidden_tags:
-                    self.forbidden_tags.append(to_add.lower())
+                channel = message[0]
+                to_add = " ".join(message[1:])
+                if channel not in self.forbidden_tags.keys():
+                    self.forbidden_tags[channel] = [to_add.lower()]
+                else:
+                    self.forbidden_tags[channel].append(to_add.lower())
                 return not_allowed(message)
 
             def remove_(message):
+                channel = message[0]
                 to_add = " ".join(message)
-                while to_add in self.forbidden_tags:
-                    self.forbidden_tags.remove(to_add.lower())
+                if channel in self.forbidden_tags.keys():
+                    while to_add in self.forbidden_tags[channel]:
+                        self.forbidden_tags[channel].remove(to_add.lower())
                 return not_allowed(message)
 
             ACCEPTABLE_COMMANDS = {
                 'help' : {'func': help_, 'desc': self.cmd_tag+'filterbot help'},
                 'list' : {'func': not_allowed, 'desc': self.cmd_tag+'filterbot list'},
-                'add' : {'func': add_, 'desc': self.cmd_tag+'filter add *tag*'},
-                'remove' : {'func': remove_, 'desc': self.cmd_tag+'filter remove *tag*'}
+                'add' : {'func': add_, 'desc': self.cmd_tag+'filter channel add *tag* [for global tags, use all for channel]'},
+                'remove' : {'func': remove_, 'desc': self.cmd_tag+'filter channel remove *tag* [for global tags, use all for channel]'}
             }
 
             if len(message) == 0:
@@ -149,7 +163,7 @@ class LoliChan(discord.Client):
             if self.verbose:
                 print('found nhentai links', urls)
             # check to see if message contains bad content
-            to_pass, problems = scan_links(urls, self.forbidden_tags)
+            to_pass, problems = scan_links(urls, message.channel.name, self.forbidden_tags)
 
             # format problems
             if len(problems) == 1:
