@@ -42,7 +42,7 @@ class LoliChan(discord.Client):
             def not_allowed(message):
                 msg = '**Forbidden Tags**'
                 for k, v in self.forbidden_tags:
-                    msg += f'\n> {k}: `{", ".join(sorted(v))}`'
+                    msg += f'\n> {k}: `{", ".join(v)}`'
                 return msg
 
             def add_(message):
