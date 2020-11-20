@@ -50,8 +50,8 @@ class LoliChan(discord.Client):
             ACCEPTABLE_COMMANDS = {
                 'help' : {'func': help_, 'desc': self.cmd_tag+'filterbot help'},
                 'list' : {'func': not_allowed, 'desc': self.cmd_tag+'filterbot list'},
-                'add' : {'func': add_, 'desc': self.cmd_tag+'filter channel add *tag* [for global tags, use all for channel]'},
-                'remove' : {'func': remove_, 'desc': self.cmd_tag+'filter channel remove *tag* [for global tags, use all for channel]'}
+                'add' : {'func': add_, 'desc': self.cmd_tag+'filter add channel *tag* [for global tags, use all for channel]'},
+                'remove' : {'func': remove_, 'desc': self.cmd_tag+'filter remove channel *tag* [for global tags, use all for channel]'}
             }
 
             if len(message) == 0:
