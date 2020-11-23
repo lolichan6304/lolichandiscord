@@ -129,15 +129,26 @@ class LoliChan(discord.Client):
 
     def command_reader(self, content):
         def help_(message):
-            # msg = "**TOOLKIT HELP**\n> Available commands:\n```"
-            # for k, v in ACCEPTABLE_COMMANDS.items():
-            #     msg += '{}: Usage - {}\n'.format(k, v['desc'])
-            # msg += '```'
-            msg = "UNDER DEVELOPMENT! TEEHEE"
+            msg = "**TOOLKIT HELP**\n> Available commands:\n```"
+            for k, v in ACCEPTABLE_COMMANDS.items():
+                msg += '{}: Usage - {}\n'.format(k, v['desc'])
+            msg += '```'
             return msg
+        
+        def schedule(message):
+            available_text = {
+                "sunday" : './data/schedule/sunday.jpg',
+                "sun" : './data/schedule/sunday.jpg'
+            }
+            if len(message) > 1 or message[0] not in available_text.keys():
+                return 'incorrect format is given, please check {}help'.format(self.cmd_tag)
+            else:
+                return discord.File(available_text[message[0]])
+
 
         ACCEPTABLE_COMMANDS = {
-            'help' : {'func': help_, 'desc': self.admin_cmd_tag+'help'},
+            'help' : {'func': help_, 'desc': self.cmd_tag+'help'},
+            'schedule' : {'func': schedule, 'desc': self.cmd_tag+'schedule'}
         }
         
         cmd = content.split(' ')[0]
