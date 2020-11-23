@@ -155,7 +155,7 @@ class LoliChan(discord.Client):
             if len(message) > 1 or message[0] not in available_text.keys():
                 return 'incorrect format is given, please check {}help'.format(self.cmd_tag), None
             else:
-                return None, discord.File(available_text[message[0]])
+                return 'timing is based on SG time (GMT+8)', discord.File(available_text[message[0]])
 
 
         ACCEPTABLE_COMMANDS = {
