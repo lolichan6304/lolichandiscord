@@ -193,6 +193,7 @@ class LoliChan(discord.Client):
                     print('a problemmatic tag was found')
                 await message.delete()
                 # await message.channel.send(f"Hi {message.author.mention}, your nhentai link(s) contain(s) the {msg} tag(s), please do not send links with these tag(s)!")
-                await message.channel.send(f"H, hey {message.author.mention}... I, it's not like I want you to stop sending nhentai link(s) containing the {msg} tag(s)!")
+                # await message.channel.send(f"H, hey {message.author.mention}... I, it's not like I want you to stop sending nhentai link(s) containing the {msg} tag(s)!")
+                await message.channel.send(f"Hi {message.author.mention}, your nhentai link(s) contain(s) the {msg} tag(s), which is(are) against discord ToS. Please refrain from posting such links in the future.")
         
             
