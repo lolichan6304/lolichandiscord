@@ -154,8 +154,8 @@ class LoliChan(discord.Client):
                 "sun" : './data/schedule/sunday.jpg'
             }
             if message[0].lower() == 'today':
-                current_time = datetime.datetime(datetime.datetime.utcnow() + datetime.timedelta(hours=8)) #GMT+8
-                day = current_time.get_weekday()
+                current_time = datetime.datetime.utcnow() + datetime.timedelta(hours=8) #GMT+8
+                day = current_time.weekday()
                 dictionary = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
                 return 'timing is based on SG time (GMT+8)', discord.File(dictionary[day])
             elif len(message) > 1 or message[0].lower() not in available_text.keys():
