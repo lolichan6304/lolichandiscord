@@ -152,10 +152,10 @@ class LoliChan(discord.Client):
                 "sunday" : './data/schedule/sunday.jpg',
                 "sun" : './data/schedule/sunday.jpg'
             }
-            if len(message) > 1 or message[0] not in available_text.keys():
+            if len(message) > 1 or message[0].lower() not in available_text.keys():
                 return 'incorrect format is given, please check {}help'.format(self.cmd_tag), None
             else:
-                return 'timing is based on SG time (GMT+8)', discord.File(available_text[message[0]])
+                return 'timing is based on SG time (GMT+8)', discord.File(available_text[message[0].lower()])
 
 
         ACCEPTABLE_COMMANDS = {
