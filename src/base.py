@@ -133,7 +133,7 @@ class LoliChan(discord.Client):
             for k, v in ACCEPTABLE_COMMANDS.items():
                 msg += '{}: Usage - {}\n'.format(k, v['desc'])
             msg += '```'
-            return msg
+            return msg, None
         
         def schedule(message):
             available_text = {
@@ -141,9 +141,9 @@ class LoliChan(discord.Client):
                 "sun" : './data/schedule/sunday.jpg'
             }
             if len(message) > 1 or message[0] not in available_text.keys():
-                return 'incorrect format is given, please check {}help'.format(self.cmd_tag)
+                return 'incorrect format is given, please check {}help'.format(self.cmd_tag), None
             else:
-                return discord.File(available_text[message[0]])
+                return None, discord.File(available_text[message[0]])
 
 
         ACCEPTABLE_COMMANDS = {
@@ -155,7 +155,7 @@ class LoliChan(discord.Client):
         if cmd in ACCEPTABLE_COMMANDS.keys():
             return ACCEPTABLE_COMMANDS[cmd]['func'](content.split(' ')[1:])
         else:
-            return 'incorect command given, please choose command from list: {}'.format(", ".join(list(ACCEPTABLE_COMMANDS.keys())))
+            return 'incorect command given, please choose command from list: {}'.format(", ".join(list(ACCEPTABLE_COMMANDS.keys()))), None
 
     # initialization
     async def on_ready(self):
@@ -182,8 +182,11 @@ class LoliChan(discord.Client):
         
         # regular command central
         if message.content[:len(self.cmd_tag)] == self.cmd_tag:
-            reply = self.command_reader(message.content[len(self.cmd_tag):])
-            await message.channel.send(reply)
+            reply, file_reply = self.command_reader(message.content[len(self.cmd_tag):])
+            if reply is not None:
+                await message.channel.send(reply)
+            if file_reply is not None:
+                await message.channel.send(file=file_reply)
             
         # filter nhentai tags
         urls = find_url(message.content)
