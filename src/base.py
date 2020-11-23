@@ -137,6 +137,18 @@ class LoliChan(discord.Client):
         
         def schedule(message):
             available_text = {
+                "monday" : './data/schedule/monday.jpg',
+                "mon" : './data/schedule/monday.jpg',
+                "tuesday" : './data/schedule/tuesday.jpg',
+                "tue" : './data/schedule/tuesday.jpg',
+                "wednesday" : './data/schedule/wednesday.jpg',
+                "wed" : './data/schedule/wednesday.jpg',
+                "thursday" : './data/schedule/thursday.jpg',
+                "thu" : './data/schedule/thursday.jpg',
+                "friday" : './data/schedule/friday.jpg',
+                "fri" : './data/schedule/friday.jpg',
+                "saturday" : './data/schedule/saturday.jpg',
+                "sat" : './data/schedule/saturday.jpg',
                 "sunday" : './data/schedule/sunday.jpg',
                 "sun" : './data/schedule/sunday.jpg'
             }
@@ -148,7 +160,7 @@ class LoliChan(discord.Client):
 
         ACCEPTABLE_COMMANDS = {
             'help' : {'func': help_, 'desc': self.cmd_tag+'help'},
-            'schedule' : {'func': schedule, 'desc': self.cmd_tag+'schedule'}
+            'schedule' : {'func': schedule, 'desc': self.cmd_tag+'schedule day [day format is 3 letter day (e.g. thu) or full name (e.g. thursday)]'}
         }
         
         cmd = content.split(' ')[0]
@@ -183,10 +195,12 @@ class LoliChan(discord.Client):
         # regular command central
         if message.content[:len(self.cmd_tag)] == self.cmd_tag:
             reply, file_reply = self.command_reader(message.content[len(self.cmd_tag):])
-            if reply is not None:
+            if reply is not None and file_reply is None:
                 await message.channel.send(reply)
-            if file_reply is not None:
+            elif file_reply is not None and reply is None:
                 await message.channel.send(file=file_reply)
+            else:
+                await message.channel.send(reply, file=file_reply)
             
         # filter nhentai tags
         urls = find_url(message.content)
