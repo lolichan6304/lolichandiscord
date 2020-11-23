@@ -1,5 +1,6 @@
 import os
 import json
+import datetime
 import discord
 
 from src.filter_tool import find_url, scan_links
@@ -152,7 +153,12 @@ class LoliChan(discord.Client):
                 "sunday" : './data/schedule/sunday.jpg',
                 "sun" : './data/schedule/sunday.jpg'
             }
-            if len(message) > 1 or message[0].lower() not in available_text.keys():
+            if message[0].lower() == 'today':
+                current_time = datetime.datetime.utcnow() + datetime.timedelta(hours=8) #GMT+8
+                day = current_time.get_weekday()
+                dictionary = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+                return 'timing is based on SG time (GMT+8)', discord.File(dictionary[day])
+            elif len(message) > 1 or message[0].lower() not in available_text.keys():
                 return 'incorrect format is given, please check {}help'.format(self.cmd_tag), None
             else:
                 return 'timing is based on SG time (GMT+8)', discord.File(available_text[message[0].lower()])
@@ -160,7 +166,7 @@ class LoliChan(discord.Client):
 
         ACCEPTABLE_COMMANDS = {
             'help' : {'func': help_, 'desc': self.cmd_tag+'help'},
-            'schedule' : {'func': schedule, 'desc': self.cmd_tag+'schedule day [day format is 3 letter day (e.g. thu) or full name (e.g. thursday)]'}
+            'schedule' : {'func': schedule, 'desc': self.cmd_tag+'schedule day [day format is 3 letter day (e.g. thu) or full name (e.g. thursday) or today]'}
         }
         
         cmd = content.split(' ')[0]
