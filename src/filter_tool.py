@@ -2,23 +2,16 @@ import re
 import requests
 from lxml import html
 
+from src.extensions.web_extensions import *
+
 def find_url(string):
     codes = []
 
     # nhentai handler
-    nhentai_regex = r"(?i)\b(?:https?://nhentai.net/g/\d+|www\d{0,3}[.]nhentai.net/g/\d+|nhentai.net/g/\d+)"
-    nhentai_url = re.findall(nhentai_regex,string)
-    for i in nhentai_url:
-        if i[-1] == '/':
-            codes.append('https://nhentai.net/api/gallery/{}'.format(i.split('/')[-2]))
-        else:
-            codes.append('https://nhentai.net/api/gallery/{}'.format(i.split('/')[-1]))
+    codes += Nhentai().find_links(string)
 
     # hentai2read handler
-    hentai2read_regex = r"(?i)\b(?:https?://hentai2read.com/[a-zA-Z0-9_]*|www\d{0,3}[.]hentai2read.com/[a-zA-Z0-9_]*|hentai2read.com/[a-zA-Z0-9_]*)"
-    hentai2read_url = re.findall(hentai2read_regex,string)
-    for i in hentai2read_url:
-        codes.append(i)
+    codes += Hentai2read().find_links(string)
 
     return codes
 
@@ -29,22 +22,21 @@ def scan_links(urls, channel_name, censoredtags):
         additional = censoredtags[channel_name]
     else:
         additional = []
+
     list_of_tags = censoredtags['all'] + additional
+
     for link in urls:
-        page = requests.get(link)
-        if page.ok:
-            if 'nhentai' in link: # nhentai filterer
-                tags = page.json()["tags"]
-                for tag in tags:
-                    if tag["name"].lower() in list_of_tags:
-                        clean = True
-                        problemmatic_tags.append(tag["name"].lower())
-            elif 'hentai2read' in link: # hentai2read filterer
-                tree = html.fromstring(page.content)
-                tags = tree.xpath('//a[@class="tagButton"]/text()')
-                for tag in tags:
-                    if tag.lower() in list_of_tags:
-                        clean = True
-                        problemmatic_tags.append(tag.lower())
+        if 'nhentai' in link: # nhentai filterer
+            tags = Nhentai().get_tags(link)
+
+        elif 'hentai2read' in link: # hentai2read filterer
+            tags = Hentai2read().get_tags(link)
+
+        # search for tags in list_of_tags
+        if tags is not None:
+            for tag in tags:
+                if tag in list_of_tags:
+                    clean = True
+                    problemmatic_tags.append(tag)
 
     return clean, problemmatic_tags
