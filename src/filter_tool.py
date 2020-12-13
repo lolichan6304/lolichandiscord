@@ -36,15 +36,15 @@ def scan_links(urls, channel_name, censoredtags):
             if 'nhentai' in link: # nhentai filterer
                 tags = page.json()["tags"]
                 for tag in tags:
-                    if tag["name"] in list_of_tags:
+                    if tag["name"].lower() in list_of_tags:
                         clean = True
-                        problemmatic_tags.append(tag["name"])
+                        problemmatic_tags.append(tag["name"].lower())
             elif 'hentai2read' in link: # hentai2read filterer
                 tree = html.fromstring(page.content)
                 tags = tree.xpath('//a[@class="tagButton"]/text()')
                 for tag in tags:
-                    if tag in list_of_tags:
+                    if tag.lower() in list_of_tags:
                         clean = True
-                        problemmatic_tags.append(tag)
+                        problemmatic_tags.append(tag.lower())
 
     return clean, problemmatic_tags
