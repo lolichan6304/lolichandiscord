@@ -45,6 +45,6 @@ def scan_links(urls, channel_name, censoredtags):
                 for tag in tags:
                     if tag in list_of_tags:
                         clean = True
-                        problemmatic_tags.append(tag["name"])
+                        problemmatic_tags.append(tag)
 
     return clean, problemmatic_tags
