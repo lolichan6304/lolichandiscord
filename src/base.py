@@ -212,7 +212,7 @@ class LoliChan(discord.Client):
         urls = find_url(message.content)
         if len(urls) > 0:
             if self.verbose:
-                print('found nhentai links', urls)
+                print('found some links', urls)
             # check to see if message contains bad content
             to_pass, problems = scan_links(urls, message.channel.name, self.forbidden_tags)
 

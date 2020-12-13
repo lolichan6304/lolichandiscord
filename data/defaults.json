@@ -1,23 +1,32 @@
 {
     "forbidden_tags": {
         "all" : [
+            "bestiality",
+            "cannibalism",
+            "guro",
             "loli",
             "lolicon",
-            "shotacon",
-            "bestiality",
             "necrophilia",
-            "cannibalism",
-            "guro"
+            "scat",
+            "shotacon"
         ],
 
         "vanilla-lounge" : [
+            "cheating", 
+            "corruption", 
+            "drug", 
+            "incest", 
+            "mind break", 
             "netorare",
-            "rape",
-            "cheating",
-            "corruption",
-            "incest",
-            "mind break",
-            "drug"
+            "rape"
+        ],
+
+        "doujin-discussion" : [
+            "blackmail",
+            "cheating", 
+            "netorare", 
+            "rape", 
+            "ugly bastard"
         ]
     },
 

@@ -3,14 +3,23 @@ import requests
 from lxml import html
 
 def find_url(string):
-    regex = r"(?i)\b(?:https?://nhentai.net/g/\d+|www\d{0,3}[.]nhentai.net/g/\d+|nhentai.net/g/\d+)"
-    url = re.findall(regex,string)
     codes = []
-    for i in url:
+
+    # nhentai handler
+    nhentai_regex = r"(?i)\b(?:https?://nhentai.net/g/\d+|www\d{0,3}[.]nhentai.net/g/\d+|nhentai.net/g/\d+)"
+    nhentai_url = re.findall(nhentai_regex,string)
+    for i in nhentai_url:
         if i[-1] == '/':
-            codes.append(i.split('/')[-2])
+            codes.append('https://nhentai.net/api/gallery/{}'.format(i.split('/')[-2]))
         else:
-            codes.append(i.split('/')[-1])
+            codes.append('https://nhentai.net/api/gallery/{}'.format(i.split('/')[-1]))
+
+    # hentai2read handler
+    hentai2read_regex = r"(?i)\b(?:https?://hentai2read.com/[a-zA-Z0-9_]*|www\d{0,3}[.]hentai2read.com/[a-zA-Z0-9_]*|hentai2read.com/[a-zA-Z0-9_]*)"
+    hentai2read_url = re.findall(hentai2read_regex,string)
+    for i in hentai2read_url:
+        codes.append(i)
+
     return codes
 
 def scan_links(urls, channel_name, censoredtags):
@@ -22,10 +31,20 @@ def scan_links(urls, channel_name, censoredtags):
         additional = []
     list_of_tags = censoredtags['all'] + additional
     for link in urls:
-        page = requests.get('https://nhentai.net/api/gallery/{}'.format(link))
-        tags = page.json()["tags"]
-        for tag in tags:
-            if tag["name"] in list_of_tags:
-                clean = True
-                problemmatic_tags.append(tag["name"])
+        page = requests.get(link)
+        if page.ok:
+            if 'nhentai' in link: # nhentai filterer
+                tags = page.json()["tags"]
+                for tag in tags:
+                    if tag["name"] in list_of_tags:
+                        clean = True
+                        problemmatic_tags.append(tag["name"])
+            elif 'hentai2read' in link: # hentai2read filterer
+                tree = html.fromstring(page.content)
+                tags = tree.xpath('//a[@class="tagButton"]/text()')
+                for tag in tags:
+                    if tag["name"] in list_of_tags:
+                        clean = True
+                        problemmatic_tags.append(tag["name"])
+
     return clean, problemmatic_tags
