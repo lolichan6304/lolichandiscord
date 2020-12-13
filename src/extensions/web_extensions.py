@@ -9,14 +9,14 @@ class Nhentai:
         self.regex = regex = r"(?i)\b(?:https?://nhentai.net/g/\d+|www\d{0,3}[.]nhentai.net/g/\d+|nhentai.net/g/\d+)"
 
     def find_links(self, message):
-        self.codes = []
+        codes = []
         urls = re.findall(self.regex, message)
         for i in urls:
             if i[-1] == '/':
-                self.codes.append('https://nhentai.net/api/gallery/{}'.format(i.split('/')[-2]))
+                codes.append('https://nhentai.net/api/gallery/{}'.format(i.split('/')[-2]))
             else:
-                self.codes.append('https://nhentai.net/api/gallery/{}'.format(i.split('/')[-1]))
-        return self.codes
+                codes.append('https://nhentai.net/api/gallery/{}'.format(i.split('/')[-1]))
+        return codes
 
     def get_tags(self, url):
         page = requests.get(url)
@@ -34,11 +34,11 @@ class Hentai2read:
         self.regex = regex = r"(?i)\b(?:https?://hentai2read.com/[a-zA-Z0-9_]*|www\d{0,3}[.]hentai2read.com/[a-zA-Z0-9_]*|hentai2read.com/[a-zA-Z0-9_]*)"
 
     def find_links(self, message):
-        self.codes = []
+        codes = []
         url = re.findall(self.regex, message)
         for i in url:
             codes.append(i)
-        return self.codes
+        return codes
 
     def get_tags(self, url):
         page = requests.get(url)

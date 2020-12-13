@@ -28,7 +28,6 @@ def scan_links(urls, channel_name, censoredtags):
     for link in urls:
         if 'nhentai' in link: # nhentai filterer
             tags = Nhentai().get_tags(link)
-
         elif 'hentai2read' in link: # hentai2read filterer
             tags = Hentai2read().get_tags(link)
 
