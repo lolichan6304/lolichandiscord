@@ -43,7 +43,7 @@ def scan_links(urls, channel_name, censoredtags):
                 tree = html.fromstring(page.content)
                 tags = tree.xpath('//a[@class="tagButton"]/text()')
                 for tag in tags:
-                    if tag["name"] in list_of_tags:
+                    if tag in list_of_tags:
                         clean = True
                         problemmatic_tags.append(tag["name"])
 
